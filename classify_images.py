@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/classify_images.py
 #                                                                             
-# PROGRAMMER: 
-# DATE CREATED:                                 
+# PROGRAMMER: Ahmad A. Khabeer
+# DATE CREATED: 17/05/2022                  
 # REVISED DATE: 
 # PURPOSE: Create a function classify_images that uses the classifier function 
 #          to create the classifier labels and then compares the classifier 
@@ -65,4 +65,27 @@ def classify_images(images_dir, results_dic, model):
      Returns:
            None - results_dic is mutable data type so no return needed.         
     """
-    None 
+    # Retrieves file names and pet labels from results dictionary
+    file_names = list(results_dic.keys())
+    pet_labels = list(results_dic.values())
+    
+    # Creates a classifer labels list
+    classifier_labels = []
+
+    for file_name in file_names:
+          classifier_label = classifier(images_dir + file_name, model)
+          classifier_labels.append(classifier_label.lower().strip())
+
+    # Populates empty dictionary with both labels &indicates if they match (idx 2)
+    for idx in range (0, len(file_names), 1):
+      # Determine if pet_labels matches classifier_labels using in operator
+      # - so if pet label is 'in' classifier label it's a match
+      # ALSO since Key already exists because labels were added, append 
+      # value to end of list for idx 2 
+      # if pet image label was FOUND then there is a match 
+      if pet_labels[idx][0] in classifier_labels[idx]:
+        results_dic[file_names[idx]].extend([classifier_labels[idx],1])
+
+      # if pet image label was NOT found then there is no match
+      else:
+        results_dic[file_names[idx]].extend([classifier_labels[idx],0]) 
